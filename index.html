@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#2a0716">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Una carta para ti 💌">
+<meta property="og:title" content="Para Xime 💌">
+<meta property="og:description" content="Una carta para ti 💌">
+<meta property="og:type" content="website">
+<title>Para Xime 💌</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%F0%9F%92%8C%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Caveat:wght@400..700&family=Playwrite+CO:wght@100..400&display=swap" rel="stylesheet">
+
+<script>
+  /* ================================================================
+     PEGA AQUÍ la URL de tu Realtime Database de Firebase, entre las
+     comillas. Ejemplo:
+       window.FIREBASE_URL = "https://perdoname-xime-default-rtdb.firebaseio.com";
+     Si la dejas vacía, la página queda en "vista previa": se ve igual,
+     pero las respuestas NO se guardan.
+     ================================================================ */
+  window.FIREBASE_URL = "";
+</script>
+
+<style>
+  :root {
+    /* Idea: una hoja arrancada del cuaderno cuadriculado, escrita en lapicero azul, sobre una noche color vino. */
+    --noche: #2a0716;
+    --papel: #fffdf6;
+    --tinta: #22408f;
+    --rosa: #d81b60;
+    --rosa-vivo: #ff4f86;
+    --claro: #ffe3ec;
+    --font-mano: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+    --font-cursiva: "Playwrite CO", "Caveat", "Segoe Script", cursive;
+    --font-ui: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --cuadro: 17px;
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--noche);
+    color: var(--claro);
+    font-family: var(--font-ui);
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: clip;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(115% 55% at 10% -5%, rgba(216, 27, 96, .42), transparent 62%),
+      radial-gradient(80% 45% at 105% 40%, rgba(255, 79, 134, .16), transparent 70%),
+      radial-gradient(120% 60% at 50% 115%, rgba(120, 18, 58, .85), transparent 70%),
+      var(--noche);
+  }
+  ::selection { background: rgba(255, 79, 134, .3); }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* ---------- Corazones que flotan al fondo ---------- */
+  .corazones { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .corazones i {
+    position: absolute;
+    left: var(--x);
+    bottom: -40px;
+    width: var(--s);
+    height: var(--s);
+    opacity: var(--o);
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff8fb1' d='M12 21.6s-7.4-4.6-10-9.1C.2 9.3 1.4 5.3 4.8 4.1c2.4-.9 4.8.1 6.2 2l1 1.4 1-1.4c1.4-1.9 3.8-2.9 6.2-2 3.4 1.2 4.6 5.2 2.8 8.4-2.6 4.5-10 9.1-10 9.1z'/%3E%3C/svg%3E") center / contain no-repeat;
+    animation: subir var(--d) linear var(--r) infinite;
+    will-change: transform;
+  }
+  @keyframes subir {
+    0%   { transform: translate3d(0, 0, 0) rotate(-12deg); }
+    25%  { transform: translate3d(14px, -30vh, 0) rotate(6deg); }
+    50%  { transform: translate3d(-8px, -60vh, 0) rotate(-6deg); }
+    75%  { transform: translate3d(12px, -90vh, 0) rotate(8deg); }
+    100% { transform: translate3d(0, -120vh, 0) rotate(-4deg); }
+  }
+
+  main {
+    width: min(100%, 540px);
+    margin-inline: auto;
+    padding:
+      max(22px, env(safe-area-inset-top))
+      max(16px, env(safe-area-inset-right))
+      max(56px, env(safe-area-inset-bottom))
+      max(16px, env(safe-area-inset-left));
+    display: grid;
+    gap: 36px;
+  }
+
+  .aviso {
+    margin: 0;
+    padding: 11px 14px;
+    border-radius: 12px;
+    background: #ffd36e;
+    color: #3a2200;
+    font: 500 14px/1.45 var(--font-ui);
+  }
+
+  /* ---------- La carta ---------- */
+  .carta {
+    position: relative;
+    isolation: isolate;
+    margin-top: 12px;
+    animation: llegar .9s cubic-bezier(.2, .8, .2, 1) both;
+  }
+  /* Sombra detrás de la hoja (deja que por los huequitos se vea el fondo) */
+  .carta::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 8px 3px 0 4px;
+    border-radius: 8px;
+    box-shadow: 0 24px 38px rgba(10, 0, 5, .55), 0 3px 6px rgba(10, 0, 5, .3);
+  }
+  @keyframes llegar {
+    from { transform: translateY(26px) rotate(-1.4deg); opacity: .3; }
+    to   { transform: none; opacity: 1; }
+  }
+
+  .cinta {
+    position: absolute;
+    z-index: 2;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    padding: 8px 28px 7px;
+    background: rgba(255, 176, 203, .88);
+    color: rgba(34, 64, 143, .92);
+    font: 700 22px/1 var(--font-mano);
+    white-space: nowrap;
+    clip-path: polygon(0 12%, 3% 0, 97% 6%, 100% 0, 98% 48%, 100% 100%, 96% 92%, 3% 100%, 0 90%, 2% 50%);
+  }
+
+  .hoja {
+    position: relative;
+    padding: 52px 20px 32px 58px;
+    border-radius: 2px 6px 6px 2px;
+    color: var(--tinta);
+    background-color: var(--papel);
+    background-image:
+      linear-gradient(90deg, transparent 42px, rgba(236, 104, 141, .7) 42px 44px, transparent 44px),
+      linear-gradient(rgba(127, 167, 222, .3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(127, 167, 222, .3) 1px, transparent 1px);
+    background-size: 100% 100%, var(--cuadro) var(--cuadro), var(--cuadro) var(--cuadro);
+    box-shadow: inset 0 0 50px rgba(150, 100, 60, .08);
+    /* Los huequitos de la hoja arrancada del cuaderno */
+    -webkit-mask: radial-gradient(circle at 21px 50%, transparent 6px, #000 6.6px) 0 4px / 100% 30px repeat-y;
+            mask: radial-gradient(circle at 21px 50%, transparent 6px, #000 6.6px) 0 4px / 100% 30px repeat-y;
+  }
+
+  .fecha {
+    margin: 0 0 6px;
+    text-align: right;
+    font: 600 21px/34px var(--font-mano);
+    opacity: .78;
+  }
+
+  .saludo {
+    margin: 0 0 12px;
+    font: 400 clamp(19px, 5.3vw, 25px)/1.8 var(--font-cursiva);
+    text-wrap: balance;
+  }
+
+  .cuerpo p {
+    margin: 0 0 17px;
+    font: 500 clamp(23px, 6.4vw, 27px)/34px var(--font-mano);
+    text-indent: 1.1em;
+    text-wrap: pretty;
+  }
+  .resalta {
+    color: inherit;
+    background: linear-gradient(178deg, transparent 0 42%, rgba(255, 79, 134, .36) 42% 88%, transparent 88%);
+    padding: 0 .12em;
+    border-radius: .25em;
+    -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
+  }
+  .cuerpo .risa {
+    text-indent: 0;
+    text-align: right;
+    margin: 4px 6px 0 0;
+  }
+  .risa span {
+    display: inline-block;
+    transform: rotate(-5deg);
+    font-weight: 700;
+    font-size: 1.2em;
+    color: var(--rosa);
+  }
+
+  .garabato {
+    display: block;
+    width: 62%;
+    height: 16px;
+    margin: 26px 0 16px;
+    fill: none;
+    stroke: var(--tinta);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    opacity: .45;
+  }
+  .garabato path { vector-effect: non-scaling-stroke; }
+
+  /* ---------- La pregunta ---------- */
+  .pregunta h2 {
+    margin: 0 0 16px;
+    font: 400 clamp(22px, 6.2vw, 30px)/1.7 var(--font-cursiva);
+    text-wrap: balance;
+  }
+
+  .opciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .opcion {
+    --c: var(--tinta);
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 64px;
+    padding: 8px 12px;
+    font: 700 clamp(26px, 7.4vw, 32px)/1 var(--font-mano);
+    color: var(--c);
+    background: rgba(255, 253, 246, .92);
+    border: 2.5px solid currentColor;
+    border-radius: 255px 18px 225px 18px / 18px 225px 18px 255px;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: transform .15s ease, background-color .2s ease;
+  }
+  .opcion--si { --c: var(--rosa); }
+  .opcion:active { transform: scale(.96) rotate(-1deg); }
+  .opcion--si[aria-pressed="true"] { background: #ffe2ec; }
+  .opcion--no[aria-pressed="true"] { background: #e4ebff; }
+  .opcion:focus-visible { outline: 3px dashed var(--c); outline-offset: 4px; }
+
+  .casilla {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border: 2.5px solid currentColor;
+    border-radius: 4px 7px 5px 8px;
+  }
+  .casilla svg { width: 26px; height: 26px; overflow: visible; }
+  .casilla path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset .4s cubic-bezier(.6, 0, .2, 1);
+  }
+  .casilla path + path { transition-delay: .18s; }
+  .opcion[aria-pressed="true"] .casilla path { stroke-dashoffset: 0; }
+
+  /* ---------- La notita para responder ---------- */
+  .nota {
+    --acento: var(--rosa);
+    position: relative;
+    margin: 28px -6px 4px -26px;
+    padding: 22px 16px 16px;
+    display: grid;
+    gap: 12px;
+    background: #ffe4ee;
+    border-radius: 3px 3px 16px 4px;
+    box-shadow: 0 14px 22px -12px rgba(70, 10, 35, .45);
+    color: #3a1d2a;
+    animation: despegar .35s cubic-bezier(.2, .8, .2, 1);
+  }
+  .nota--no {
+    --acento: var(--tinta);
+    background: #e7eeff;
+    box-shadow: 0 14px 22px -12px rgba(20, 30, 80, .4);
+    color: #1f2a4a;
+  }
+  .nota::before {
+    content: "";
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    width: 96px;
+    height: 24px;
+    transform: translateX(-50%) rotate(2.5deg);
+    background: rgba(255, 255, 255, .6);
+    clip-path: polygon(0 12%, 3% 0, 97% 6%, 100% 0, 98% 48%, 100% 100%, 96% 92%, 3% 100%, 0 90%, 2% 50%);
+  }
+  @keyframes despegar {
+    from { transform: translateY(-8px) rotate(-.8deg); opacity: .35; }
+    to   { transform: none; opacity: 1; }
+  }
+
+  .nota__titulo {
+    font: 700 28px/1.1 var(--font-mano);
+    color: var(--acento);
+  }
+  .campo { display: grid; gap: 6px; }
+  .campo__etiqueta {
+    font: 600 13px/1.2 var(--font-ui);
+    letter-spacing: .02em;
+    color: #7a4a5d;
+  }
+  .nota--no .campo__etiqueta { color: #4a5578; }
+
+  .nota input,
+  .nota textarea {
+    width: 100%;
+    margin: 0;
+    padding: 11px 13px;
+    font: 400 16px/1.45 var(--font-ui);
+    color: #2a1520;
+    background: rgba(255, 255, 255, .85);
+    border: 1.5px solid rgba(120, 40, 70, .22);
+    border-radius: 12px;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .nota--no input,
+  .nota--no textarea { border-color: rgba(34, 64, 143, .25); color: #1a2240; }
+  .nota textarea { min-height: 116px; resize: none; }
+  .nota input:focus,
+  .nota textarea:focus {
+    outline: none;
+    border-color: var(--acento);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--acento) 20%, transparent);
+  }
+  .nota ::placeholder { color: rgba(90, 60, 75, .55); }
+
+  .nota__pie {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    font: 400 13px/1.4 var(--font-ui);
+    color: #7a5565;
+  }
+  .nota--no .nota__pie { color: #4f5a7c; }
+  .nota__aviso { margin: 0; }
+  .contador { flex: none; font-variant-numeric: tabular-nums; }
+  .contador--lleno { color: #b0003a; font-weight: 600; }
+
+  .nota__estado {
+    margin: 0;
+    font: 600 14px/1.4 var(--font-ui);
+    color: #b0003a;
+  }
+  .nota__estado:empty { display: none; }
+
+  .nota__acciones {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .boton {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+    min-height: 50px;
+    padding: 15px 22px;
+    border-radius: 999px;
+    font: 650 16px/1 var(--font-ui);
+    color: #fff;
+    background: var(--acento);
+    box-shadow: 0 10px 18px -10px var(--acento);
+    touch-action: manipulation;
+  }
+  .boton:active { transform: translateY(1px) scale(.98); }
+  .boton:disabled { opacity: .65; cursor: progress; }
+  .boton-sec {
+    appearance: none;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    min-height: 50px;
+    padding: 15px 12px;
+    border-radius: 999px;
+    font: 600 15px/1 var(--font-ui);
+    color: inherit;
+    opacity: .75;
+    touch-action: manipulation;
+  }
+  .boton:focus-visible,
+  .boton-sec:focus-visible { outline: 3px solid var(--acento); outline-offset: 3px; }
+
+  .gracias {
+    margin-top: 20px;
+    display: grid;
+    justify-items: start;
+    gap: 12px;
+  }
+  .gracias__texto {
+    margin: 0;
+    font: 700 26px/1.25 var(--font-mano);
+    color: var(--rosa);
+    text-wrap: pretty;
+  }
+  .gracias--no .gracias__texto { color: var(--tinta); }
+  .ver-ramo {
+    appearance: none;
+    cursor: pointer;
+    min-height: 48px;
+    padding: 8px 18px;
+    font: 700 25px/1 var(--font-mano);
+    color: var(--rosa);
+    background: rgba(255, 253, 246, .92);
+    border: 2px dashed currentColor;
+    border-radius: 255px 18px 225px 18px / 18px 225px 18px 255px;
+    touch-action: manipulation;
+  }
+  .ver-ramo:active { transform: scale(.97); }
+  .ver-ramo:focus-visible { outline: 3px solid var(--rosa); outline-offset: 3px; }
+
+  /* ================= El ramo de flores (todo en CSS) ================= */
+  .con-ramo, .con-ramo body { overflow: hidden; }
+
+  .ramo-capa {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: grid;
+    place-items: center;
+    padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background:
+      radial-gradient(90% 60% at 50% 38%, rgba(150, 18, 70, .55), transparent 70%),
+      #16030c;
+    animation: capa-entra .4s ease-out both;
+  }
+  .ramo-capa:focus { outline: none; }
+  .ramo-capa.cerrando { animation: capa-sale .3s ease-in both; }
+  @keyframes capa-entra { from { opacity: 0; } }
+  @keyframes capa-sale { to { opacity: 0; } }
+
+  .ramo-capa__contenido {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+  .ramo-capa__gracias {
+    margin: 0;
+    font: 400 clamp(21px, 5.8vw, 28px)/1.7 var(--font-cursiva);
+    color: var(--claro);
+    text-wrap: balance;
+    animation: texto-sube .8s cubic-bezier(.2, .8, .2, 1) 2.6s both;
+  }
+  .ramo-capa__volver {
+    appearance: none;
+    cursor: pointer;
+    min-height: 48px;
+    padding: 14px 24px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(255, 227, 236, .5);
+    background: rgba(255, 255, 255, .07);
+    color: var(--claro);
+    font: 600 15px/1 var(--font-ui);
+    touch-action: manipulation;
+    animation: texto-sube .6s ease-out 3.1s both;
+  }
+  .ramo-capa__volver:focus-visible { outline: 3px solid var(--rosa-vivo); outline-offset: 3px; }
+  @keyframes texto-sube { from { opacity: 0; transform: translateY(12px); } }
+
+  /* Escenario: todo se mide en "cqw" (1cqw = 1% del ancho del ramo) */
+  .ramo {
+    position: relative;
+    width: min(84vw, 360px);
+    width: min(84vw, 360px, calc((100svh - 230px) * .75));
+    aspect-ratio: 3 / 4;
+    container-type: inline-size;
+  }
+  .ramo i, .ramo b { display: block; position: absolute; }
+  .ramo__mecer, .ramo__corazones, .ramo__brillos, .lazo { position: absolute; inset: 0; }
+  .ramo__corazones, .ramo__brillos { pointer-events: none; }
+
+  .ramo__luz {
+    left: -12cqw;
+    right: -12cqw;
+    top: -4cqw;
+    height: 110cqw;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 92, 141, .42), rgba(255, 92, 141, .1) 62%, transparent);
+    animation: encender 1.6s ease-out .2s both, latir 4s ease-in-out 2s infinite alternate;
+  }
+  @keyframes encender { from { opacity: 0; transform: scale(.4); } }
+  @keyframes latir { to { opacity: .7; transform: scale(1.07); } }
+
+  .ramo__mecer {
+    transform-origin: 50% 96%;
+    animation: mecer 6s ease-in-out 3.2s infinite;
+    will-change: transform;
+  }
+  @keyframes mecer {
+    0%, 100% { transform: rotate(0deg); }
+    25%      { transform: rotate(1.6deg); }
+    75%      { transform: rotate(-1.6deg); }
+  }
+
+  /* Papel de seda de atrás */
+  .papel {
+    left: 4cqw;
+    top: 26cqw;
+    width: 92cqw;
+    height: 92cqw;
+    transform-origin: 50% 100%;
+    clip-path: polygon(50% 100%, 0 16%, 9% 6%, 19% 12%, 30% 2%, 41% 9%, 50% 0, 59% 9%, 70% 2%, 81% 12%, 91% 6%, 100% 16%);
+    animation: desplegar .8s cubic-bezier(.2, .9, .3, 1.15) var(--e) both;
+  }
+  .papel--a { --e: .25s; rotate: -9deg; background: linear-gradient(100deg, #ead2bc 0%, #fbf1e6 42%, #f4e2d0 68%, #e2c4a8 100%); }
+  .papel--b { --e: .38s; rotate: 9deg; background: linear-gradient(80deg, #f9ecdf 0%, #fffaf3 40%, #f1dcc7 100%); }
+  @keyframes desplegar { from { opacity: 0; transform: scale(.3, .15); } }
+
+  /* Hojas */
+  .hojita {
+    left: calc(var(--x) * 1cqw);
+    top: calc((var(--y) - var(--h) / 2) * 1cqw);
+    width: calc(var(--w) * 1cqw);
+    height: calc(var(--h) * 1cqw);
+    transform-origin: 0 50%;
+    rotate: var(--a);
+    background: linear-gradient(180deg, #7fc48e, #3d8c58 58%, #2b6842);
+    clip-path: polygon(0 50%, 8% 30%, 22% 14%, 42% 4%, 62% 6%, 80% 18%, 93% 34%, 100% 50%, 93% 62%, 80% 78%, 62% 92%, 42% 96%, 22% 86%, 8% 70%);
+    animation: asomar .7s cubic-bezier(.3, 1.4, .5, 1) var(--e) both;
+  }
+  .hojita--clara { background: linear-gradient(180deg, #a6dcae, #5aa66f 58%, #3c7d52); }
+  .hojita::after {
+    content: "";
+    position: absolute;
+    left: 5%;
+    right: 9%;
+    top: 50%;
+    height: .4cqw;
+    margin-top: -.2cqw;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, .32);
+  }
+  @keyframes asomar { from { transform: scaleX(0); } }
+
+  /* Ramitas de flores blancas pequeñitas */
+  .nube {
+    left: calc((var(--x) - 7) * 1cqw);
+    top: calc((var(--y) - 5) * 1cqw);
+    width: 14cqw;
+    height: 10cqw;
+    background:
+      radial-gradient(circle at 18% 42%, #fff 0 .95cqw, transparent 1.1cqw),
+      radial-gradient(circle at 33% 18%, #fff 0 .8cqw, transparent .95cqw),
+      radial-gradient(circle at 51% 36%, #fff 0 1cqw, transparent 1.15cqw),
+      radial-gradient(circle at 69% 16%, #fff 0 .8cqw, transparent .95cqw),
+      radial-gradient(circle at 85% 44%, #fff 0 .9cqw, transparent 1.05cqw),
+      radial-gradient(circle at 40% 64%, #fff 0 .85cqw, transparent 1cqw),
+      radial-gradient(circle at 63% 68%, #fff 0 .8cqw, transparent .95cqw),
+      radial-gradient(circle at 25% 82%, rgba(255, 255, 255, .85) 0 .7cqw, transparent .85cqw),
+      radial-gradient(circle at 78% 84%, rgba(255, 255, 255, .85) 0 .7cqw, transparent .85cqw);
+    animation: brotar-nube .6s ease-out var(--e) both;
+  }
+  @keyframes brotar-nube { from { opacity: 0; transform: translateY(40%) scale(.2); } }
+
+  /* Cada flor sube desde el papel y se abre */
+  .flor {
+    position: absolute;
+    isolation: isolate;
+    left: calc((var(--x) - var(--d) / 2) * 1cqw);
+    top: calc((var(--y) - var(--d) / 2) * 1cqw);
+    width: calc(var(--d) * 1cqw);
+    height: calc(var(--d) * 1cqw);
+    rotate: var(--a, 0deg);
+    transform-origin: 50% 85%;
+    animation: brotar .85s cubic-bezier(.3, 1.45, .55, 1) var(--e) both;
+  }
+  @keyframes brotar {
+    from { opacity: 0; transform: translateY(70%) scale(.1); }
+    35%  { opacity: 1; }
+  }
+
+  /* Rosas */
+  .rosa--roja   { --r1: #f2416f; --r2: #d81b55; --r3: #ad0f3d; --r4: #780828; --r5: rgba(105, 4, 32, .6); }
+  .rosa--rosada { --r1: #ffb0c8; --r2: #ff86ab; --r3: #ec6491; --r4: #c13c6c; --r5: rgba(170, 35, 85, .5); }
+  .rosa > i {
+    width: 56%;
+    height: 50%;
+    border-radius: 62% 38% 58% 42% / 64% 58% 42% 36%;
+    background: radial-gradient(circle at 62% 30%, var(--r2), var(--r3) 85%);
+    animation: abrir .7s cubic-bezier(.3, 1.5, .5, 1) calc(var(--e) + .2s) both;
+  }
+  .rosa > i:nth-child(1) { left: -4%; top: 30%; rotate: -32deg; }
+  .rosa > i:nth-child(2) { right: -4%; top: 30%; rotate: 32deg; scale: -1 1; }
+  .rosa > i:nth-child(3) { left: 22%; top: 56%; height: 44%; }
+  @keyframes abrir { from { transform: scale(.2); } }
+  .rosa > b {
+    inset: 7%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 44%, var(--r4) 0 10%, var(--r3) 11% 30%, var(--r2) 31% 62%, var(--r1) 63%);
+    box-shadow: inset 0 calc(var(--d) * -.06cqw) calc(var(--d) * .12cqw) rgba(60, 0, 20, .28);
+  }
+  .rosa > b > i {
+    border-radius: 50%;
+    border: calc(var(--d) * .035cqw) solid transparent;
+    border-top-color: var(--r5);
+    border-left-color: var(--r5);
+    animation: espiral .9s cubic-bezier(.2, .8, .2, 1) calc(var(--e) + .25s) both;
+  }
+  .rosa > b > i:nth-child(1) { inset: 8%; rotate: -40deg; }
+  .rosa > b > i:nth-child(2) { inset: 22%; rotate: 70deg; }
+  .rosa > b > i:nth-child(3) { inset: 36%; rotate: 190deg; }
+  @keyframes espiral { from { opacity: 0; transform: rotate(-150deg) scale(.3); } }
+
+  /* Margaritas */
+  .margarita > i {
+    left: 39%;
+    top: 0;
+    width: 22%;
+    height: 50%;
+    border-radius: 50% 50% 45% 45% / 68% 68% 32% 32%;
+    background: linear-gradient(#ffffff, #f2ebf1);
+    box-shadow: inset 0 -.3cqw .6cqw rgba(120, 80, 110, .14);
+    transform-origin: 50% 100%;
+    rotate: calc(var(--i) * 36deg);
+    animation: petalo .5s cubic-bezier(.3, 1.6, .5, 1) calc(var(--e) + .3s + var(--i) * 45ms) both;
+  }
+  @keyframes petalo { from { transform: scaleY(0); } }
+  .margarita > b {
+    inset: 33%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 34%, #ffe58a, #f6b800 58%, #d48a00);
+    box-shadow: 0 0 0 .3cqw rgba(170, 110, 0, .14);
+    animation: abrir .5s cubic-bezier(.3, 1.6, .5, 1) calc(var(--e) + .15s) both;
+  }
+
+  /* Tulipanes */
+  .tulipan > i {
+    bottom: 10%;
+    transform-origin: 50% 100%;
+    border-radius: 50% 50% 46% 46% / 72% 72% 30% 30%;
+  }
+  .tulipan > i:nth-child(1),
+  .tulipan > i:nth-child(2) {
+    width: 48%;
+    height: 72%;
+    animation: tul-abrir .7s cubic-bezier(.3, 1.5, .5, 1) calc(var(--e) + .3s) both;
+  }
+  .tulipan > i:nth-child(1) { left: 8%; rotate: -15deg; background: linear-gradient(160deg, #ff9fbc, #e45a89); }
+  .tulipan > i:nth-child(2) { right: 8%; rotate: 15deg; background: linear-gradient(200deg, #ff9fbc, #e45a89); }
+  .tulipan > i:nth-child(3) { left: 23%; width: 54%; height: 84%; background: linear-gradient(170deg, #ffd3e0, #ff8db0 62%, #ef6292); }
+  @keyframes tul-abrir { from { rotate: 0deg; } }
+  .tulipan::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 47%;
+    top: 86%;
+    width: 6%;
+    height: 90%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #2f6f45, #5eaa72);
+  }
+
+  /* Papel de adelante (el cono) */
+  .frente {
+    left: 12cqw;
+    top: 66cqw;
+    width: 76cqw;
+    height: 62cqw;
+    clip-path: polygon(0 5%, 7% 0, 16% 4%, 27% 0, 38% 5%, 50% 0, 62% 5%, 73% 0, 84% 4%, 93% 0, 100% 5%, 63% 100%, 37% 100%);
+    background: linear-gradient(90deg, #ee9bb4 0%, #f8c2d2 22%, #fcd6e1 48%, #f6b9cb 74%, #e68aa7 100%);
+    animation: subir-papel .8s cubic-bezier(.2, .9, .3, 1) .45s both;
+  }
+  .frente--pliegue {
+    clip-path: polygon(0 5%, 7% 0, 16% 4%, 27% 0, 38% 5%, 50% 0, 62% 5%, 67% 2.7%, 56% 100%, 37% 100%);
+    background: linear-gradient(100deg, #f7c6d5 0%, #fde3eb 62%, #fff4f7 96%);
+    animation-delay: .52s;
+  }
+  @keyframes subir-papel { from { opacity: 0; transform: translateY(26%); } }
+
+  /* Lazo y tarjetica */
+  .lazo__banda {
+    left: 29.5cqw;
+    top: 99.5cqw;
+    width: 41cqw;
+    height: 6cqw;
+    border-radius: 1cqw;
+    background: linear-gradient(180deg, #e2336f, #b5124a);
+    animation: estirar .5s ease-out 1.95s both;
+  }
+  @keyframes estirar { from { transform: scaleX(0); } }
+  .lazo__cola {
+    top: 103cqw;
+    width: 5.5cqw;
+    height: 21cqw;
+    transform-origin: 50% 0;
+    background: linear-gradient(90deg, #c2185b, #e93c74 50%, #b0124a);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%);
+    animation: caer .6s cubic-bezier(.3, 1.4, .5, 1) 2.2s both;
+  }
+  .lazo__cola--izq { left: 45cqw; rotate: 24deg; }
+  .lazo__cola--der { left: 49.5cqw; rotate: -24deg; }
+  @keyframes caer { from { transform: scaleY(0); } }
+  .lazo__ala {
+    top: 95cqw;
+    width: 17cqw;
+    height: 11cqw;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: pop .6s cubic-bezier(.3, 1.7, .5, 1) 2.1s both;
+  }
+  .lazo__ala--izq {
+    left: 33.5cqw;
+    rotate: -16deg;
+    transform-origin: 100% 50%;
+    background:
+      radial-gradient(ellipse 26% 32% at 78% 52%, #7a0a2c 0 70%, transparent 74%),
+      linear-gradient(150deg, #ff6b98, #d81b60 55%, #a80f45);
+  }
+  .lazo__ala--der {
+    left: 49.5cqw;
+    rotate: 16deg;
+    transform-origin: 0 50%;
+    background:
+      radial-gradient(ellipse 26% 32% at 22% 52%, #7a0a2c 0 70%, transparent 74%),
+      linear-gradient(210deg, #ff6b98, #d81b60 55%, #a80f45);
+  }
+  .lazo__nudo {
+    left: 46.5cqw;
+    top: 97.5cqw;
+    width: 7cqw;
+    height: 8.5cqw;
+    border-radius: 2cqw;
+    background: linear-gradient(180deg, #f2467d, #b5124a);
+    box-shadow: 0 .4cqw .8cqw rgba(60, 0, 20, .3);
+    animation: pop .5s cubic-bezier(.3, 1.7, .5, 1) 2.05s both;
+  }
+  @keyframes pop { from { transform: scale(0); } }
+  .tarjeta {
+    position: absolute;
+    left: 56cqw;
+    top: 107cqw;
+    padding: 1.4cqw 2.6cqw 1.4cqw 4.4cqw;
+    border-radius: 1.2cqw;
+    background: #fffaf2;
+    color: var(--tinta);
+    font: 700 5.4cqw/1 var(--font-mano);
+    white-space: nowrap;
+    box-shadow: 0 .6cqw 1.4cqw rgba(60, 0, 20, .3);
+    transform-origin: 1.9cqw 50%;
+    rotate: 10deg;
+    animation: colgar 1.1s cubic-bezier(.3, 1.6, .4, 1) 2.35s both, mecer-tarjeta 3.2s ease-in-out 3.6s infinite alternate;
+  }
+  .tarjeta::before {
+    content: "";
+    position: absolute;
+    left: 1.25cqw;
+    top: 50%;
+    width: 1.3cqw;
+    height: 1.3cqw;
+    margin-top: -.65cqw;
+    border-radius: 50%;
+    background: #e6cdb9;
+  }
+  .tarjeta::after {
+    content: "";
+    position: absolute;
+    left: 1.75cqw;
+    bottom: 50%;
+    width: .35cqw;
+    height: 6cqw;
+    background: #f3cf63;
+    transform-origin: 50% 100%;
+    rotate: -40deg;
+  }
+  @keyframes colgar { from { opacity: 0; transform: rotate(-70deg); } }
+  @keyframes mecer-tarjeta { from { transform: rotate(0deg); } to { transform: rotate(7deg); } }
+
+  /* Brillitos y corazones alrededor */
+  .ramo__brillos i {
+    left: calc(var(--x) * 1cqw);
+    top: calc(var(--y) * 1cqw);
+    width: calc(var(--s) * 1cqw);
+    height: calc(var(--s) * 1cqw);
+    opacity: .85;
+    background: #fff4c4;
+    clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+    animation: titilar 2.4s ease-in-out var(--e) infinite both;
+  }
+  @keyframes titilar {
+    0%, 100% { opacity: 0; transform: scale(.3) rotate(0deg); }
+    50%      { opacity: 1; transform: scale(1) rotate(45deg); }
+  }
+  .ramo__corazones i {
+    left: calc(var(--x) * 1cqw);
+    top: calc(var(--y) * 1cqw);
+    width: calc(var(--s) * 1cqw);
+    height: calc(var(--s) * 1cqw);
+    opacity: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff8fb1' d='M12 21.6s-7.4-4.6-10-9.1C.2 9.3 1.4 5.3 4.8 4.1c2.4-.9 4.8.1 6.2 2l1 1.4 1-1.4c1.4-1.9 3.8-2.9 6.2-2 3.4 1.2 4.6 5.2 2.8 8.4-2.6 4.5-10 9.1-10 9.1z'/%3E%3C/svg%3E") center / contain no-repeat;
+    animation: flotar var(--d) ease-in var(--e) infinite;
+  }
+  @keyframes flotar {
+    0%   { opacity: 0; transform: translate(0, 0) scale(.5); }
+    15%  { opacity: .85; }
+    100% { opacity: 0; transform: translate(3cqw, -55cqw) scale(1.1); }
+  }
+
+  /* ---------- Respuestas ---------- */
+  .muro { display: grid; gap: 12px; }
+  .muro__cabeza {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-inline: 4px;
+  }
+  .muro__cabeza h2 {
+    margin: 0;
+    font: 700 38px/1 var(--font-mano);
+    color: var(--claro);
+  }
+  .muro__conteo {
+    padding: 6px 11px;
+    border-radius: 999px;
+    font: 600 13px/1 var(--font-ui);
+    font-variant-numeric: tabular-nums;
+    color: #ffd0de;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .14);
+  }
+
+  .panel {
+    padding: 4px 16px;
+    border-radius: 22px;
+    background: #fff8fa;
+    color: #2a1520;
+    box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .6);
+  }
+  .lista { list-style: none; margin: 0; padding: 0; }
+
+  .resp {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+    padding: 15px 0;
+    border-radius: 12px;
+  }
+  .resp + .resp { border-top: 1px solid #f3dce4; }
+  .resp__avatar {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font: 700 16px/1 var(--font-ui);
+    color: #fff;
+    background: linear-gradient(140deg, #ff86ab, #d81b60);
+  }
+  .resp--no .resp__avatar { background: linear-gradient(140deg, #8aa6ec, #2b4aa8); }
+  .resp__meta {
+    margin: 0 0 5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    font: 400 13px/1.3 var(--font-ui);
+  }
+  .resp__meta strong { font-weight: 650; font-size: 15px; color: #2a1520; overflow-wrap: anywhere; }
+  .resp__chip {
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ad1457;
+    background: #ffe0ea;
+  }
+  .resp--no .resp__chip { color: #27449e; background: #e3eaff; }
+  .resp__hora { font-size: 12.5px; color: #8d6b78; }
+  .resp__texto {
+    margin: 0;
+    font: 400 15.5px/1.5 var(--font-ui);
+    color: #3b2430;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .resp--nueva { animation: brillo 2.6s ease-out; }
+  @keyframes brillo {
+    0%, 35% { background: #ffe3ec; box-shadow: 0 0 0 10px #ffe3ec; }
+    100%    { background: transparent; box-shadow: 0 0 0 10px transparent; }
+  }
+
+  .muro__estado { padding: 6px 0; }
+  .vacio {
+    margin: 0;
+    padding: 12px 0;
+    font: 600 25px/1.25 var(--font-mano);
+    color: #8d4a64;
+  }
+  .error-carga {
+    margin: 0;
+    padding: 14px 0 8px;
+    font: 400 15px/1.45 var(--font-ui);
+    color: #7a2340;
+  }
+  .reintentar {
+    appearance: none;
+    margin: 0 0 14px;
+    min-height: 44px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--rosa);
+    background: none;
+    color: var(--rosa);
+    font: 650 15px/1 var(--font-ui);
+    cursor: pointer;
+  }
+  .reintentar:focus-visible { outline: 3px solid var(--rosa); outline-offset: 3px; }
+
+  .esq {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+    padding: 15px 0;
+  }
+  .esq + .esq { border-top: 1px solid #f3dce4; }
+  .esq i {
+    display: block;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #f6e3ea 0%, #fbeff3 50%, #f6e3ea 100%) 0 0 / 200% 100%;
+    animation: brillar 1.3s linear infinite;
+  }
+  .esq__av { width: 40px; height: 40px; }
+  .esq__l { height: 12px; margin: 6px 0 10px; width: 62%; }
+  .esq__l--corta { width: 88%; margin: 0; }
+  @keyframes brillar { to { background-position: -200% 0; } }
+
+  .lluvia {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      animation-delay: 0s !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+      transition-delay: 0s !important;
+      scroll-behavior: auto !important;
+    }
+    .corazones { display: none; }
+    .ramo, .ramo *, .ramo *::before, .ramo *::after { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="corazones" aria-hidden="true">
+  <i style="--x:5%;--s:16px;--d:19s;--r:-2s;--o:.30"></i>
+  <i style="--x:16%;--s:10px;--d:23s;--r:-11s;--o:.22"></i>
+  <i style="--x:27%;--s:22px;--d:27s;--r:-6s;--o:.16"></i>
+  <i style="--x:39%;--s:12px;--d:21s;--r:-15s;--o:.26"></i>
+  <i style="--x:50%;--s:18px;--d:29s;--r:-3s;--o:.15"></i>
+  <i style="--x:61%;--s:9px;--d:18s;--r:-9s;--o:.28"></i>
+  <i style="--x:71%;--s:24px;--d:31s;--r:-20s;--o:.13"></i>
+  <i style="--x:80%;--s:13px;--d:22s;--r:-13s;--o:.24"></i>
+  <i style="--x:89%;--s:17px;--d:25s;--r:-1s;--o:.2"></i>
+  <i style="--x:95%;--s:10px;--d:20s;--r:-17s;--o:.26"></i>
+</div>
+
+<main>
+  <p class="aviso" id="aviso" hidden><strong>Vista previa.</strong> Falta pegar la URL de Firebase en el archivo, así que las respuestas todavía no se guardan.</p>
+
+  <article class="carta" aria-labelledby="saludo">
+    <div class="hoja">
+      <p class="fecha">20 de noviembre de 2026</p>
+      <h1 class="saludo" id="saludo">Querida Xime, amor mío,</h1>
+
+      <div class="cuerpo">
+        <p>Hay muchas cosas por las que me quiero disculpar, a veces puedo ser insoportable y lo admito, realmente es como soy, temo que esa sea la razón por la que no quieras intentar nada conmigo.</p>
+        <p>Me disculpo por actitudes groseras mías que te han hecho sentir cosas feas, me disculpo por palabras que no debí decir y que realmente no quería decir, me disculpo por no saber expresarme cara a cara contigo, también me disculpo por este corazón que hace que mirarte de otra forma que no sea con ojos de amor sea imposible...</p>
+        <p>Y finalmente, perdóname por rehusarme a soltarte. Pero es que <mark class="resalta">no puedo dejar de amarte tanto</mark> y tampoco lo haré, no te vas a librar de mí, te voy a seguir donde sea que estés.</p>
+        <p class="risa"><span>buajajajaj 😈</span></p>
+      </div>
+
+      <svg class="garabato" viewBox="0 0 240 16" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9c18-9 26 8 44 0s26-9 44 0 26 8 44 0 26-9 44 0 26 8 44 0 12-5 14-3"/></svg>
+
+      <section class="pregunta" aria-labelledby="pregunta">
+        <h2 id="pregunta">¿Sí me perdonas? 🥹</h2>
+
+        <div class="opciones">
+          <button class="opcion opcion--si" id="botonSi" type="button" aria-pressed="false">
+            <span class="casilla" aria-hidden="true"><svg viewBox="0 0 24 24"><path pathLength="1" d="M4 12.8c1.9 1.7 3.4 3.6 5.2 5.9 3-5.4 6.6-10 11.6-14.4"/></svg></span>
+            Siiii
+          </button>
+          <button class="opcion opcion--no" id="botonNo" type="button" aria-pressed="false">
+            <span class="casilla" aria-hidden="true"><svg viewBox="0 0 24 24"><path pathLength="1" d="M5.5 5.2c4.6 4.4 9 9 13.2 13.8"/><path pathLength="1" d="M18.6 5c-4.4 4.2-8.6 9-12.8 14.2"/></svg></span>
+            Nooo
+          </button>
+        </div>
+
+        <form class="nota nota--no" id="nota" hidden novalidate>
+          <label class="nota__titulo" for="razon">¿Por qué no me perdonas?</label>
+          <label class="campo" for="nombre">
+            <span class="campo__etiqueta">Tu nombre</span>
+            <input id="nombre" name="nombre" type="text" maxlength="30" autocomplete="given-name" value="Xime">
+          </label>
+          <textarea id="razon" name="razon" rows="4" maxlength="500" placeholder="No te perdono porque…"></textarea>
+          <div class="nota__pie">
+            <p class="nota__aviso">Tu respuesta queda publicada aquí y la ve cualquiera que tenga el link.</p>
+            <span class="contador" id="contador" aria-hidden="true">0/500</span>
+          </div>
+          <p class="nota__estado" id="estado" role="alert"></p>
+          <div class="nota__acciones">
+            <button class="boton-sec" id="cancelar" type="button">Cancelar</button>
+            <button class="boton" id="publicar" type="submit">Publicar respuesta</button>
+          </div>
+        </form>
+
+        <div class="gracias" id="gracias" hidden>
+          <p class="gracias__texto" id="graciasTexto" role="status"></p>
+          <button class="ver-ramo" id="verRamo" type="button" hidden>Ver mi ramo otra vez 💐</button>
+        </div>
+      </section>
+    </div>
+    <div class="cinta" aria-hidden="true">para Xime ♡</div>
+  </article>
+
+  <section class="muro" aria-labelledby="tituloMuro">
+    <div class="muro__cabeza">
+      <h2 id="tituloMuro">Respuestas</h2>
+      <span class="muro__conteo" id="conteo" hidden></span>
+    </div>
+    <div class="panel">
+      <ol class="lista" id="lista"></ol>
+      <div class="muro__estado" id="muroEstado" hidden></div>
+    </div>
+  </section>
+
+  <noscript><p class="aviso">Activa JavaScript para poder responder.</p></noscript>
+</main>
+
+<div class="ramo-capa" id="ramoCapa" role="dialog" aria-modal="true" aria-labelledby="ramoGracias" tabindex="-1" hidden>
+  <div class="ramo-capa__contenido">
+    <div id="ramoEscena"></div>
+    <p class="ramo-capa__gracias" id="ramoGracias">Gracias por perdonarme 🥹💗</p>
+    <button class="ramo-capa__volver" id="ramoVolver" type="button">Volver a la carta</button>
+  </div>
+</div>
+
+<template id="plantillaRamo">
+  <div class="ramo" role="img" aria-label="Un ramo de rosas, margaritas y tulipanes para Xime">
+    <i class="ramo__luz"></i>
+
+    <div class="ramo__corazones">
+      <i style="--x:8;--y:78;--s:5;--e:2.7s;--d:5.2s"></i>
+      <i style="--x:15;--y:92;--s:3.6;--e:3.5s;--d:4.6s"></i>
+      <i style="--x:24;--y:70;--s:4.2;--e:4.3s;--d:5.6s"></i>
+      <i style="--x:74;--y:72;--s:4.4;--e:3.1s;--d:5s"></i>
+      <i style="--x:84;--y:90;--s:5.4;--e:3.9s;--d:5.8s"></i>
+      <i style="--x:91;--y:76;--s:3.4;--e:4.7s;--d:4.8s"></i>
+    </div>
+
+    <div class="ramo__mecer">
+      <i class="papel papel--a"></i>
+      <i class="papel papel--b"></i>
+
+      <i class="hojita" style="--x:28;--y:60;--w:22;--h:9;--a:165deg;--e:.8s"></i>
+      <i class="hojita hojita--clara" style="--x:72;--y:60;--w:22;--h:9;--a:15deg;--e:.86s"></i>
+      <i class="hojita hojita--clara" style="--x:24;--y:42;--w:20;--h:8;--a:198deg;--e:.92s"></i>
+      <i class="hojita" style="--x:76;--y:42;--w:20;--h:8;--a:-18deg;--e:.98s"></i>
+      <i class="hojita" style="--x:40;--y:24;--w:17;--h:7;--a:238deg;--e:1.04s"></i>
+      <i class="hojita hojita--clara" style="--x:60;--y:24;--w:17;--h:7;--a:-58deg;--e:1.1s"></i>
+      <i class="hojita" style="--x:50;--y:21;--w:15;--h:6;--a:-90deg;--e:1.16s"></i>
+
+      <i class="nube" style="--x:17;--y:25;--e:1.35s"></i>
+      <i class="nube" style="--x:35;--y:13;--e:1.45s"></i>
+      <i class="nube" style="--x:83;--y:25;--e:1.5s"></i>
+      <i class="nube" style="--x:65;--y:13;--e:1.55s"></i>
+
+      <div class="flor tulipan" style="--x:16;--y:46;--d:16;--a:-24deg;--e:1.15s"><i></i><i></i><i></i></div>
+      <div class="flor tulipan" style="--x:84;--y:46;--d:16;--a:24deg;--e:1.3s"><i></i><i></i><i></i></div>
+
+      <div class="flor rosa rosa--rosada" style="--x:50;--y:24;--d:19;--e:1.25s"><i></i><i></i><i></i><b><i></i><i></i><i></i></b></div>
+      <div class="flor rosa rosa--rosada" style="--x:27;--y:32;--d:17;--e:1.4s"><i></i><i></i><i></i><b><i></i><i></i><i></i></b></div>
+      <div class="flor rosa rosa--rosada" style="--x:73;--y:32;--d:17;--e:1.5s"><i></i><i></i><i></i><b><i></i><i></i><i></i></b></div>
+
+      <div class="flor margarita" style="--x:38;--y:35;--d:16;--e:1.6s"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i><i style="--i:8"></i><i style="--i:9"></i><b></b></div>
+      <div class="flor margarita" style="--x:63;--y:36;--d:16;--e:1.7s"><i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i><i style="--i:8"></i><i style="--i:9"></i><b></b></div>
+
+      <div class="flor rosa rosa--roja" style="--x:30;--y:52;--d:21;--e:1.75s"><i></i><i></i><i></i><b><i></i><i></i><i></i></b></div>
+      <div class="flor rosa rosa--roja" style="--x:70;--y:52;--d:21;--e:1.85s"><i></i><i></i><i></i><b><i></i><i></i><i></i></b></div>
+      <div class="flor rosa rosa--roja" style="--x:50;--y:46;--d:25;--e:1.95s"><i></i><i></i><i></i><b><i></i><i></i><i></i></b></div>
+
+      <i class="nube" style="--x:50;--y:63;--e:2s"></i>
+      <div class="flor rosa rosa--rosada" style="--x:41;--y:63;--d:12;--e:2.05s"><i></i><i></i><i></i><b><i></i><i></i><i></i></b></div>
+      <div class="flor rosa rosa--rosada" style="--x:59;--y:63;--d:12;--e:2.12s"><i></i><i></i><i></i><b><i></i><i></i><i></i></b></div>
+
+      <i class="frente"></i>
+      <i class="frente frente--pliegue"></i>
+
+      <div class="lazo">
+        <i class="lazo__banda"></i>
+        <i class="lazo__cola lazo__cola--izq"></i>
+        <i class="lazo__cola lazo__cola--der"></i>
+        <i class="lazo__ala lazo__ala--izq"></i>
+        <i class="lazo__ala lazo__ala--der"></i>
+        <i class="lazo__nudo"></i>
+        <span class="tarjeta">para Xime ♡</span>
+      </div>
+    </div>
+
+    <div class="ramo__brillos">
+      <i style="--x:5;--y:16;--s:4.2;--e:2.3s"></i>
+      <i style="--x:91;--y:10;--s:5;--e:2.6s"></i>
+      <i style="--x:2;--y:56;--s:3.4;--e:3.1s"></i>
+      <i style="--x:94;--y:50;--s:4;--e:2.9s"></i>
+      <i style="--x:17;--y:3;--s:3;--e:3.4s"></i>
+      <i style="--x:79;--y:1;--s:3.6;--e:2.5s"></i>
+      <i style="--x:8;--y:96;--s:4.4;--e:3.7s"></i>
+      <i style="--x:89;--y:92;--s:3.4;--e:3.3s"></i>
+      <i style="--x:48;--y:0;--s:3;--e:4s"></i>
+    </div>
+  </div>
+</template>
+
+<script>
+(() => {
+  'use strict';
+
+  const BASE = String(window.FIREBASE_URL || '').trim();
+  const MAX = 500;
+  const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (id) => document.getElementById(id);
+
+  const ui = {
+    aviso: $('aviso'),
+    si: $('botonSi'),
+    no: $('botonNo'),
+    nota: $('nota'),
+    nombre: $('nombre'),
+    razon: $('razon'),
+    contador: $('contador'),
+    estado: $('estado'),
+    publicar: $('publicar'),
+    cancelar: $('cancelar'),
+    gracias: $('gracias'),
+    graciasTexto: $('graciasTexto'),
+    verRamo: $('verRamo'),
+    capa: $('ramoCapa'),
+    escena: $('ramoEscena'),
+    volver: $('ramoVolver'),
+    plantilla: $('plantillaRamo'),
+    lista: $('lista'),
+    conteo: $('conteo'),
+    muroEstado: $('muroEstado')
+  };
+
+  const TEXTOS = {
+    si: {
+      chip: 'Te perdono 💗',
+      gracias: 'Gracias por perdonarme 🥹💗'
+    },
+    no: {
+      chip: 'No te perdono 💔',
+      gracias: 'Gracias por decirme por qué. Tu respuesta ya quedó publicada abajo 🤍'
+    }
+  };
+
+  /* ================= Guardado de respuestas ================= */
+
+  function conLimite(url, opciones, ms) {
+    const control = new AbortController();
+    const reloj = setTimeout(() => control.abort(), ms);
+    return fetch(url, Object.assign({}, opciones, { signal: control.signal }))
+      .finally(() => clearTimeout(reloj));
+  }
+
+  function normalizar(datos) {
+    if (!datos || typeof datos !== 'object') return [];
+    return Object.keys(datos)
+      .map((id) => {
+        const r = datos[id] || {};
+        return {
+          id,
+          tipo: r.tipo === 'no' ? 'no' : 'si',
+          texto: typeof r.texto === 'string' ? r.texto : '',
+          nombre: typeof r.nombre === 'string' && r.nombre.trim() ? r.nombre.trim() : 'Anónimo',
+          creado: typeof r.creado === 'number' ? r.creado : 0
+        };
+      })
+      .filter((r) => r.texto.trim())
+      .sort((a, b) => b.creado - a.creado);
+  }
+
+  function crearAlmacen(base) {
+    const raiz = base.replace(/\/+$/, '');
+
+    if (!raiz) {
+      // Vista previa: guarda solo en memoria mientras la página está abierta.
+      const memoria = [];
+      return {
+        modo: 'vista-previa',
+        listar: () => new Promise((listo) => setTimeout(() => listo(memoria.slice()), 250)),
+        agregar: (r) => {
+          const nueva = Object.assign({ id: 'previa-' + Date.now() }, r, { creado: Date.now() });
+          memoria.unshift(nueva);
+          return Promise.resolve(nueva);
+        }
+      };
+    }
+
+    const url = raiz + '/respuestas.json';
+    return {
+      modo: 'firebase',
+      async listar() {
+        const res = await conLimite(url, { cache: 'no-store' }, 10000);
+        if (!res.ok) throw new Error('Firebase respondió ' + res.status + ' al leer (¿publicaste las reglas?)');
+        return normalizar(await res.json());
+      },
+      async agregar(r) {
+        // Se envía como texto plano para evitar la petición previa de CORS; Firebase lo lee como JSON.
+        const cuerpo = JSON.stringify(Object.assign({}, r, { creado: { '.sv': 'timestamp' } }));
+        const res = await conLimite(url, { method: 'POST', body: cuerpo }, 12000);
+        if (!res.ok) throw new Error('Firebase respondió ' + res.status + ' al guardar (¿publicaste las reglas?)');
+        const { name } = await res.json();
+        return Object.assign({ id: name }, r, { creado: Date.now() });
+      }
+    };
+  }
+
+  const almacen = crearAlmacen(BASE);
+  if (almacen.modo === 'vista-previa') ui.aviso.hidden = false;
+
+  /* ================= Muro de respuestas ================= */
+
+  let respuestas = [];
+  let firmaPintada = null;
+  let recienPublicada = null;
+  let cargando = false;
+
+  const relativo = (window.Intl && Intl.RelativeTimeFormat)
+    ? new Intl.RelativeTimeFormat('es', { numeric: 'auto' })
+    : null;
+
+  function haceCuanto(ts) {
+    if (!ts) return '';
+    const seg = Math.round((Date.now() - ts) / 1000);
+    if (seg < 45) return 'hace un momento';
+    if (relativo && seg < 3600) return relativo.format(-Math.round(seg / 60), 'minute');
+    if (relativo && seg < 86400) return relativo.format(-Math.round(seg / 3600), 'hour');
+    if (relativo && seg < 7 * 86400) return relativo.format(-Math.round(seg / 86400), 'day');
+    return new Date(ts).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  const idSeguro = (id) => 'r' + String(id).replace(/[^\w-]/g, '');
+
+  function crearFila(r) {
+    const li = document.createElement('li');
+    li.className = 'resp resp--' + r.tipo;
+    li.id = idSeguro(r.id);
+    if (r.id === recienPublicada) li.classList.add('resp--nueva');
+
+    const avatar = document.createElement('span');
+    avatar.className = 'resp__avatar';
+    avatar.setAttribute('aria-hidden', 'true');
+    avatar.textContent = (Array.from(r.nombre)[0] || '♡').toUpperCase();
+
+    const cuerpo = document.createElement('div');
+    const meta = document.createElement('p');
+    meta.className = 'resp__meta';
+
+    const nombre = document.createElement('strong');
+    nombre.textContent = r.nombre;
+
+    const chip = document.createElement('span');
+    chip.className = 'resp__chip';
+    chip.textContent = TEXTOS[r.tipo].chip;
+
+    const hora = document.createElement('time');
+    hora.className = 'resp__hora';
+    if (r.creado) {
+      hora.dateTime = new Date(r.creado).toISOString();
+      hora.dataset.ts = String(r.creado);
+      hora.textContent = haceCuanto(r.creado);
+    }
+
+    meta.append(nombre, chip, hora);
+
+    const texto = document.createElement('p');
+    texto.className = 'resp__texto';
+    texto.textContent = r.texto;
+
+    cuerpo.append(meta, texto);
+    li.append(avatar, cuerpo);
+    return li;
+  }
+
+  function actualizarHoras() {
+    ui.lista.querySelectorAll('time[data-ts]').forEach((t) => {
+      t.textContent = haceCuanto(Number(t.dataset.ts));
+    });
+  }
+
+  function pintarMuro() {
+    const firma = respuestas.map((r) => r.id).join('|');
+    if (firma === firmaPintada) { actualizarHoras(); return; }
+    firmaPintada = firma;
+
+    const fragmento = document.createDocumentFragment();
+    respuestas.forEach((r) => fragmento.append(crearFila(r)));
+    ui.lista.replaceChildren(fragmento);
+
+    const n = respuestas.length;
+    ui.conteo.hidden = n === 0;
+    ui.conteo.textContent = n === 1 ? '1 respuesta' : n + ' respuestas';
+    mostrarEstado(n === 0 ? 'vacio' : null);
+  }
+
+  function mostrarEstado(tipo) {
+    const caja = ui.muroEstado;
+    caja.replaceChildren();
+    caja.hidden = !tipo;
+    if (!tipo) return;
+
+    if (tipo === 'cargando') {
+      caja.innerHTML = '<div class="esq"><i class="esq__av"></i><div><i class="esq__l"></i><i class="esq__l esq__l--corta"></i></div></div>'.repeat(2)
+        + '<p class="sr-only">Cargando respuestas…</p>';
+      return;
+    }
+
+    if (tipo === 'vacio') {
+      const p = document.createElement('p');
+      p.className = 'vacio';
+      p.textContent = 'Todavía no hay respuestas.';
+      caja.append(p);
+      return;
+    }
+
+    if (tipo === 'error') {
+      const p = document.createElement('p');
+      p.className = 'error-carga';
+      p.textContent = 'No pude cargar las respuestas. Revisa tu conexión e inténtalo otra vez.';
+      const boton = document.createElement('button');
+      boton.type = 'button';
+      boton.className = 'reintentar';
+      boton.textContent = 'Reintentar';
+      boton.addEventListener('click', () => cargar());
+      caja.append(p, boton);
+    }
+  }
+
+  async function cargar(opciones) {
+    const silencioso = Boolean(opciones && opciones.silencioso);
+    if (cargando) return;
+    cargando = true;
+    if (!silencioso) {
+      firmaPintada = null;
+      ui.lista.replaceChildren();
+      ui.conteo.hidden = true;
+      mostrarEstado('cargando');
+    }
+    try {
+      respuestas = await almacen.listar();
+      pintarMuro();
+    } catch (err) {
+      console.error('[respuestas] No se pudieron cargar:', err);
+      if (!silencioso || respuestas.length === 0) {
+        firmaPintada = null;
+        ui.lista.replaceChildren();
+        mostrarEstado('error');
+      }
+    } finally {
+      cargando = false;
+    }
+  }
+
+  /* ================= Responder ================= */
+
+  let eleccion = null;
+  let enviando = false;
+
+  function marcar(tipo) {
+    ui.si.setAttribute('aria-pressed', String(tipo === 'si'));
+    ui.no.setAttribute('aria-pressed', String(tipo === 'no'));
+  }
+
+  function actualizarContador() {
+    const n = ui.razon.value.length;
+    ui.contador.textContent = n + '/' + MAX;
+    ui.contador.classList.toggle('contador--lleno', n >= MAX);
+  }
+
+  function ajustarAltura() {
+    ui.razon.style.height = 'auto';
+    ui.razon.style.height = Math.min(ui.razon.scrollHeight + 3, 340) + 'px';
+  }
+
+  function decir(mensaje) {
+    ui.estado.textContent = mensaje || '';
+  }
+
+  function mostrarGracias(tipo, extra) {
+    ui.graciasTexto.textContent = TEXTOS[tipo].gracias + (extra || '');
+    ui.gracias.classList.toggle('gracias--no', tipo === 'no');
+    ui.verRamo.hidden = tipo !== 'si';
+    ui.gracias.hidden = false;
+  }
+
+  // Nooo: abre la notita para escribir la razón.
+  function abrirNota() {
+    eleccion = 'no';
+    marcar('no');
+    ui.gracias.hidden = true;
+    decir('');
+    ui.nota.hidden = false;
+
+    requestAnimationFrame(() => {
+      ui.nota.scrollIntoView({ behavior: sinMovimiento ? 'auto' : 'smooth', block: 'center' });
+      ui.razon.focus({ preventScroll: true });
+    });
+  }
+
+  // Siiii: sale el ramo de flores.
+  ui.si.addEventListener('click', () => {
+    eleccion = null;
+    marcar('si');
+    decir('');
+    ui.nota.hidden = true;
+    mostrarGracias('si');
+    abrirRamo();
+  });
+  ui.no.addEventListener('click', abrirNota);
+
+  ui.cancelar.addEventListener('click', () => {
+    eleccion = null;
+    marcar(null);
+    decir('');
+    ui.nota.hidden = true;
+  });
+
+  ui.razon.addEventListener('input', () => {
+    actualizarContador();
+    ajustarAltura();
+    if (ui.razon.value.trim()) decir('');
+  });
+
+  ui.nombre.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      ui.razon.focus();
+    }
+  });
+
+  ui.nota.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!eleccion || enviando) return;
+
+    const texto = ui.razon.value.trim().slice(0, MAX);
+    const nombre = ui.nombre.value.trim().slice(0, 30) || 'Anónimo';
+
+    if (texto.length < 2) {
+      decir('Escribe la razón antes de publicar.');
+      ui.razon.focus();
+      return;
+    }
+
+    enviando = true;
+    ui.publicar.disabled = true;
+    ui.publicar.textContent = 'Publicando…';
+    decir('');
+
+    try {
+      const nueva = await almacen.agregar({ tipo: 'no', texto, nombre });
+
+      respuestas = [nueva].concat(respuestas.filter((r) => r.id !== nueva.id));
+      recienPublicada = nueva.id;
+      pintarMuro();
+
+      ui.razon.value = '';
+      actualizarContador();
+      ajustarAltura();
+      ui.nota.hidden = true;
+      eleccion = null;
+
+      mostrarGracias('no', almacen.modo === 'vista-previa' ? ' (Vista previa: no se guardó.)' : '');
+
+      setTimeout(() => {
+        const fila = document.getElementById(idSeguro(nueva.id));
+        if (fila) fila.scrollIntoView({ behavior: sinMovimiento ? 'auto' : 'smooth', block: 'center' });
+      }, 350);
+    } catch (err) {
+      console.error('[respuestas] No se pudo publicar:', err);
+      decir('No se pudo publicar. Revisa tu conexión e inténtalo otra vez.');
+    } finally {
+      enviando = false;
+      ui.publicar.disabled = false;
+      ui.publicar.textContent = 'Publicar respuesta';
+    }
+  });
+
+  /* ================= El ramo ================= */
+
+  let ramoAbierto = false;
+  let relojLluvia = null;
+  let relojCierre = null;
+
+  function abrirRamo() {
+    if (ramoAbierto) return;
+    ramoAbierto = true;
+    clearTimeout(relojCierre);
+    ui.capa.classList.remove('cerrando');
+    // Se clona de nuevo cada vez para que las animaciones arranquen desde cero.
+    ui.escena.replaceChildren(ui.plantilla.content.cloneNode(true));
+    ui.capa.hidden = false;
+    ui.capa.scrollTop = 0;
+    document.documentElement.classList.add('con-ramo');
+    ui.capa.focus({ preventScroll: true });
+    // Así el botón "atrás" del celular cierra el ramo en vez de salir de la página.
+    try { history.pushState({ ramo: true }, ''); } catch (e) { /* sin historial */ }
+
+    clearTimeout(relojLluvia);
+    relojLluvia = setTimeout(() => {
+      const ramo = ui.escena.querySelector('.ramo');
+      if (ramoAbierto && ramo) lluviaDeCorazones(ramo, 0.4);
+    }, 2300);
+  }
+
+  function cerrarRamo(desdeHistorial) {
+    if (!ramoAbierto) return;
+    ramoAbierto = false;
+    clearTimeout(relojLluvia);
+    if (!desdeHistorial && history.state && history.state.ramo) {
+      try { history.back(); } catch (e) { /* sin historial */ }
+    }
+    document.documentElement.classList.remove('con-ramo');
+    ui.capa.classList.add('cerrando');
+    relojCierre = setTimeout(() => {
+      ui.capa.hidden = true;
+      ui.capa.classList.remove('cerrando');
+      ui.escena.replaceChildren();
+    }, sinMovimiento ? 0 : 280);
+    (ui.verRamo.hidden ? ui.si : ui.verRamo).focus({ preventScroll: true });
+  }
+
+  ui.volver.addEventListener('click', () => cerrarRamo(false));
+  ui.verRamo.addEventListener('click', abrirRamo);
+  window.addEventListener('popstate', () => cerrarRamo(true));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') cerrarRamo(false);
+  });
+  ui.capa.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      ui.volver.focus();
+    }
+  });
+
+  /* ================= Lluvia de corazones ================= */
+
+  function lluviaDeCorazones(origen, alturaRelativa) {
+    if (sinMovimiento) return;
+    const lienzo = document.createElement('canvas');
+    lienzo.className = 'lluvia';
+    lienzo.setAttribute('aria-hidden', 'true');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const ancho = window.innerWidth;
+    const alto = window.innerHeight;
+    lienzo.width = Math.round(ancho * dpr);
+    lienzo.height = Math.round(alto * dpr);
+    document.body.append(lienzo);
+
+    const ctx = lienzo.getContext('2d');
+    if (!ctx || !window.Path2D) { lienzo.remove(); return; }
+    ctx.scale(dpr, dpr);
+
+    const corazon = new Path2D('M12 21.6s-7.4-4.6-10-9.1C.2 9.3 1.4 5.3 4.8 4.1c2.4-.9 4.8.1 6.2 2l1 1.4 1-1.4c1.4-1.9 3.8-2.9 6.2-2 3.4 1.2 4.6 5.2 2.8 8.4-2.6 4.5-10 9.1-10 9.1z');
+    const colores = ['#ff3d7f', '#ff7aa2', '#ffc2d4', '#ffffff', '#d81b60'];
+    const caja = origen.getBoundingClientRect();
+    const x0 = caja.left + caja.width / 2;
+    const y0 = caja.top + caja.height * (alturaRelativa || 0.5);
+
+    const piezas = Array.from({ length: 48 }, () => {
+      const angulo = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.35;
+      const rapidez = 5 + Math.random() * 9;
+      return {
+        x: x0, y: y0,
+        vx: Math.cos(angulo) * rapidez,
+        vy: Math.sin(angulo) * rapidez,
+        escala: 0.55 + Math.random() * 1.1,
+        giro: (Math.random() - 0.5) * 0.8,
+        vgiro: (Math.random() - 0.5) * 0.14,
+        color: colores[(Math.random() * colores.length) | 0]
+      };
+    });
+
+    const inicio = performance.now();
+    const duracion = 2000;
+    let anterior = inicio;
+
+    function cuadro(ahora) {
+      const paso = Math.min(2.5, (ahora - anterior) / 16.67);
+      anterior = ahora;
+      const avance = (ahora - inicio) / duracion;
+      ctx.clearRect(0, 0, ancho, alto);
+      ctx.globalAlpha = Math.max(0, 1 - avance * avance);
+      for (const p of piezas) {
+        p.vy += 0.3 * paso;
+        p.vx *= Math.pow(0.985, paso);
+        p.vy *= Math.pow(0.985, paso);
+        p.x += p.vx * paso;
+        p.y += p.vy * paso;
+        p.giro += p.vgiro * paso;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.giro);
+        ctx.scale(p.escala, p.escala);
+        ctx.translate(-12, -12);
+        ctx.fillStyle = p.color;
+        ctx.fill(corazon);
+        ctx.restore();
+      }
+      if (avance < 1) requestAnimationFrame(cuadro);
+      else lienzo.remove();
+    }
+    requestAnimationFrame(cuadro);
+  }
+
+  /* ================= Arranque ================= */
+
+  if (history.state && history.state.ramo) {
+    try { history.replaceState(null, ''); } catch (e) { /* sin historial */ }
+  }
+  actualizarContador();
+  cargar();
+
+  if (almacen.modo === 'firebase') {
+    setInterval(() => {
+      if (document.visibilityState === 'visible') cargar({ silencioso: true });
+    }, 25000);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') cargar({ silencioso: true });
+    });
+  }
+  setInterval(actualizarHoras, 60000);
+})();
+</script>
+</body>
+</html>
